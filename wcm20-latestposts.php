@@ -21,15 +21,29 @@ add_action('init', 'wlp_init');
 /**
  * Shortcode [latest-posts]
  *
- * @param array $args Arguments passed in shortcode
+ * @param array $user_atts Attributes passed in shortcode
  * @param mixed $content Content inside shortcode
+ * @param string $tag Shortcode tag (name). Default empty.
  * @return string
  */
-function wlp_shortcode_latest_posts($args = [], $content = null) {
-	$output = "<h2>Latest Posts</h2>";
+function wlp_shortcode_latest_posts($user_atts = [], $content = null, $tag = '') {
+
+	// change all attribute keys to lowercase
+	$user_atts = array_change_key_case((array)$user_atts, CASE_LOWER);
+
+	// set default values
+	$default_atts = [
+		'posts' => 3,
+		'title' => __('Latest Posts', 'wcm20-latestposts'),
+	];
+
+	// combine default attributes with user attributes, and remove any unsupported keys
+	$atts = shortcode_atts($default_atts, $user_atts, $tag);
+
+	$output = "<h2>{$atts['title']}</h2>";
 
 	$posts = new WP_Query([
-		'posts_per_page' => 3,
+		'posts_per_page' => $atts['posts'],
 	]);
 
 	if ($posts->have_posts()) {
