@@ -53,11 +53,14 @@ function wlp_shortcode_latest_posts($user_atts = [], $content = null, $tag = '')
 		while ($posts->have_posts()) {
 			$posts->the_post();
 
-			$output .= "<li>";
-			$output .= "<a href=\"" . get_the_permalink() . "\">";
-			$output .= get_the_title();
-			$output .= "</a>";
-			$output .= "</li>";
+			$output .= sprintf(
+				'<li><a href="%s">%s</a> <small>in %s by %s at %s</small></li>',
+				get_the_permalink(),
+				get_the_title(),
+				get_the_category_list(', '),
+				get_the_author(),
+				get_the_date('Y-m-d H:i'),
+			);
 		}
 
 		// reset postdata
