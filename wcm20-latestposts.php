@@ -54,12 +54,12 @@ function wlp_shortcode_latest_posts($user_atts = [], $content = null, $tag = '')
 			$posts->the_post();
 
 			$output .= sprintf(
-				'<li><a href="%s">%s</a> <small>in %s by %s at %s</small></li>',
+				'<li><a href="%s">%s</a> <small>in %s by %s %s ago</small></li>',
 				get_the_permalink(),
 				get_the_title(),
 				get_the_category_list(', '),
 				get_the_author(),
-				get_the_date('Y-m-d H:i'),
+				human_time_diff(get_the_date('U'))
 			);
 		}
 
