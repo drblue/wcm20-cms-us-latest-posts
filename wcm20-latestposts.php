@@ -40,7 +40,9 @@ function wlp_shortcode_latest_posts($args = [], $content = null) {
 			$posts->the_post();
 
 			$output .= "<li>";
+			$output .= "<a href=\"" . get_the_permalink() . "\">";
 			$output .= get_the_title();
+			$output .= "</a>";
 			$output .= "</li>";
 		}
 
