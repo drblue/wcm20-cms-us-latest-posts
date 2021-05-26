@@ -10,6 +10,19 @@
  */
 
 /**
+ * Include dependencies
+ */
+require_once('class.SimpleTextWidget.php');
+
+/**
+ * Register widgets
+ */
+function wlp_widgets_init() {
+	register_widget('SimpleTextWidget');
+}
+add_action('widgets_init', 'wlp_widgets_init');
+
+/**
  * Register plugin shortcodes
  */
 function wlp_init() {
@@ -59,7 +72,7 @@ function wlp_shortcode_latest_posts($user_atts = [], $content = null, $tag = '')
 				get_the_title(),
 				get_the_category_list(', '),
 				get_the_author(),
-				human_time_diff(get_the_date('U'))
+				human_time_diff(get_the_date('U'), current_time('timestamp'))
 			);
 		}
 
