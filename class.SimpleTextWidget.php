@@ -49,7 +49,7 @@ class SimpleTextWidget extends WP_Widget {
 		}
 
 		// render content
-		echo "<p>Here be content (in the future)!</p>";
+		echo "<p>{$instance['description']}</p>";
 
 		// end widget
 		echo $args['after_widget'];
@@ -72,6 +72,13 @@ class SimpleTextWidget extends WP_Widget {
 			$title = '';
 		}
 
+		// do we have a description set? if so, use it, otherwise set empty description
+		if (isset($instance['description'])) {
+			$description = $instance['description'];
+		} else {
+			$description = '';
+		}
+
 		?>
 			<!-- title -->
 			<p>
@@ -83,6 +90,19 @@ class SimpleTextWidget extends WP_Widget {
 					name="<?php echo $this->get_field_name('title') ?>"
 					type="text"
 					value="<?php echo $title; ?>"
+				>
+			</p>
+
+			<!-- description -->
+			<p>
+				<label for="<?php echo $this->get_field_id('description') ?>">Description:</label>
+
+				<input
+					class="widefat"
+					id="<?php echo $this->get_field_id('description') ?>"
+					name="<?php echo $this->get_field_name('description') ?>"
+					type="text"
+					value="<?php echo $description; ?>"
 				>
 			</p>
 		<?php
@@ -101,7 +121,11 @@ class SimpleTextWidget extends WP_Widget {
 		$instance = [];
 
 		$instance['title'] = (!empty($new_instance['title']))
-			? $new_instance['title']
+			? strip_tags($new_instance['title'])
+			: '';
+
+		$instance['description'] = (!empty($new_instance['description']))
+			? strip_tags($new_instance['description'])
 			: '';
 
 		return $instance;
