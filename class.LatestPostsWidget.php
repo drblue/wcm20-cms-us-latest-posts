@@ -48,11 +48,11 @@ class LatestPostsWidget extends WP_Widget {
 				$posts->the_post();
 
 				$output .= sprintf(
-					'<li class="latest-post-list-item"><a href="%s">%s</a> <small>in %s by %s %s ago</small></li>',
+					'<li class="latest-post-list-item"><a href="%s">%s</a> <small>in %s %s %s ago</small></li>',
 					get_the_permalink(),
 					get_the_title(),
 					get_the_category_list(', '),
-					get_the_author(),
+					isset($instance['show_author']) ? 'by ' . get_the_author() : '',
 					human_time_diff(get_the_date('U'), current_time('timestamp'))
 				);
 			}
@@ -89,6 +89,9 @@ class LatestPostsWidget extends WP_Widget {
 		// do we have number of posts to show set? if so, use it, otherwise set default to 3
 		$nbr_posts = isset($instance['nbr_posts']) ? $instance['nbr_posts'] : self::DEFAULT_NBR_POSTS_TO_SHOW;
 
+		// should we show the author?
+		$show_author = isset($instance['show_author']);
+
 		?>
 			<!-- title -->
 			<p>
@@ -115,6 +118,20 @@ class LatestPostsWidget extends WP_Widget {
 					value="<?php echo $nbr_posts; ?>"
 				>
 			</p>
+
+			<!-- show author? -->
+			<p>
+				<label for="<?php echo $this->get_field_id('show_author') ?>">Show author</label>
+
+				<input
+					class="widefat"
+					id="<?php echo $this->get_field_id('show_author') ?>"
+					name="<?php echo $this->get_field_name('show_author') ?>"
+					type="checkbox"
+					value="1"
+					<?php if ($show_author) { echo "checked"; } ?>
+				>
+			</p>
 		<?php
 	}
 
@@ -137,6 +154,10 @@ class LatestPostsWidget extends WP_Widget {
 		$instance['nbr_posts'] = (!empty($new_instance['nbr_posts']))
 			? $new_instance['nbr_posts']
 			: self::DEFAULT_NBR_POSTS_TO_SHOW;
+
+		if (isset($new_instance['show_author'])) {
+			$instance['show_author'] = true;
+		}
 
 		return $instance;
 	}
