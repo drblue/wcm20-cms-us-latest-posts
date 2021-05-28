@@ -48,8 +48,15 @@ class SimpleTextWidget extends WP_Widget {
 			echo $args['before_title'] . $instance['title'] . $args['after_title'];
 		}
 
-		// render content
-		echo "<p>{$instance['description']}</p>";
+		// render description
+		if (!empty($instance['description'])) {
+			echo "<p><em>{$instance['description']}</em></p>";
+		}
+
+		// render text
+		if (!empty($instance['text'])) {
+			echo wpautop("{$instance['text']}");
+		}
 
 		// end widget
 		echo $args['after_widget'];
@@ -79,6 +86,9 @@ class SimpleTextWidget extends WP_Widget {
 			$description = '';
 		}
 
+		// do we have a text set? if so, use it, otherwise set empty text
+		$text = isset($instance['text']) ? $instance['text'] : '';
+
 		?>
 			<!-- title -->
 			<p>
@@ -105,6 +115,18 @@ class SimpleTextWidget extends WP_Widget {
 					value="<?php echo $description; ?>"
 				>
 			</p>
+
+			<!-- text -->
+			<p>
+				<label for="<?php echo $this->get_field_id('text') ?>">Text:</label>
+
+				<textarea
+					class="widefat"
+					id="<?php echo $this->get_field_id('text') ?>"
+					name="<?php echo $this->get_field_name('text') ?>"
+					rows="8"
+				><?php echo $text; ?></textarea>
+			</p>
 		<?php
 	}
 
@@ -126,6 +148,10 @@ class SimpleTextWidget extends WP_Widget {
 
 		$instance['description'] = (!empty($new_instance['description']))
 			? strip_tags($new_instance['description'])
+			: '';
+
+		$instance['text'] = (!empty($new_instance['text']))
+			? $new_instance['text']
 			: '';
 
 		return $instance;
