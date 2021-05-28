@@ -2,6 +2,8 @@
 
 class LatestPostsWidget extends WP_Widget {
 
+	const DEFAULT_NBR_POSTS_TO_SHOW = 3;
+
 	/**
 	 * Construct a new widget instance.
 	 */
@@ -35,7 +37,7 @@ class LatestPostsWidget extends WP_Widget {
 
 		// get latest posts
 		$posts = new WP_Query([
-			'posts_per_page' => 3,
+			'posts_per_page' => $instance['nbr_posts'] ?? self::DEFAULT_NBR_POSTS_TO_SHOW,
 		]);
 
 		if ($posts->have_posts()) {
@@ -84,6 +86,9 @@ class LatestPostsWidget extends WP_Widget {
 		// do we have a title set? if so, use it, otherwise set empty title
 		$title = isset($instance['title']) ? $instance['title'] : '';
 
+		// do we have number of posts to show set? if so, use it, otherwise set default to 3
+		$nbr_posts = isset($instance['nbr_posts']) ? $instance['nbr_posts'] : self::DEFAULT_NBR_POSTS_TO_SHOW;
+
 		?>
 			<!-- title -->
 			<p>
@@ -95,6 +100,19 @@ class LatestPostsWidget extends WP_Widget {
 					name="<?php echo $this->get_field_name('title') ?>"
 					type="text"
 					value="<?php echo $title; ?>"
+				>
+			</p>
+
+			<!-- nbr_posts -->
+			<p>
+				<label for="<?php echo $this->get_field_id('nbr_posts') ?>">Posts to show:</label>
+
+				<input
+					class="widefat"
+					id="<?php echo $this->get_field_id('nbr_posts') ?>"
+					name="<?php echo $this->get_field_name('nbr_posts') ?>"
+					type="number"
+					value="<?php echo $nbr_posts; ?>"
 				>
 			</p>
 		<?php
@@ -115,6 +133,10 @@ class LatestPostsWidget extends WP_Widget {
 		$instance['title'] = (!empty($new_instance['title']))
 			? strip_tags($new_instance['title'])
 			: '';
+
+		$instance['nbr_posts'] = (!empty($new_instance['nbr_posts']))
+			? $new_instance['nbr_posts']
+			: self::DEFAULT_NBR_POSTS_TO_SHOW;
 
 		return $instance;
 	}
