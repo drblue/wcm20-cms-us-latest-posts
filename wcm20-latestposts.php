@@ -12,12 +12,14 @@
 /**
  * Include dependencies
  */
+require_once('class.LatestPostsWidget.php');
 require_once('class.SimpleTextWidget.php');
 
 /**
  * Register widgets
  */
 function wlp_widgets_init() {
+	register_widget('LatestPostsWidget');
 	register_widget('SimpleTextWidget');
 }
 add_action('widgets_init', 'wlp_widgets_init');
